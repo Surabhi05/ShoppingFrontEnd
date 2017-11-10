@@ -1,0 +1,47 @@
+<beans xsi:schemaLocation=" http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/mvc 
+ http://www.springframework.org/schema/mvc/spring-mvc.xsd
+ http://www.springframework.org/schema/context  
+ http://www.springframework.org/schema/context/spring-context.xsd 
+ http://www.springframework.org/schema/tx 
+ http://www.springframework.org/schema/tx/spring-tx.xsd 
+ http://www.springframework.org/schema/security 
+ http://www.springframework.org/schema/security/spring-security.xsd" 
+ xmlns:tx="http://www.springframework.org/schema/tx" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xmlns:security="http://www.springframework.org/schema/security" 
+ xmlns:context="http://www.springframework.org/schema/context" 
+ xmlns:mvc="http://www.springframework.org/schema/mvc" 
+ xmlns="http://www.springframework.org/schema/beans">
+
+<context:component-scan base-package="com.niit"/>
+<security:http use-expressions="true" auto-config="true">
+
+<security:intercept-url access="permitAll" pattern="/"/>
+
+<security:intercept-url access="hasRole('ADMIN')" pattern="/admin/*"/>
+
+<security:intercept-url access="hasRole('USER')" pattern="/user/*"/>
+
+<security:form-login authentication-failure-url="/fail2login" default-target-url="/welcome" login-page="/login" password-parameter="password" username-parameter="username" login-processing-url="/login"/>
+
+<security:logout logout-success-url="/logout" logout-url="/logout1"/>
+
+<security:csrf disabled="true"/>
+
+</security:http>
+
+
+<security:authentication-manager>
+
+
+<security:authentication-provider>
+
+<security:jdbc-user-service authorities-by-username-query="select email as username, role from Customer where email=?" users-by-username-query="select email as username,password,'true' as enable from Customer where email=?" data-source-ref="dataSource"/>
+
+</security:authentication-provider>
+
+</security:authentication-manager>
+
+</beans>
